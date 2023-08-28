@@ -5,7 +5,7 @@ type Props = {
   title: string
   description: string
   date: string
-  tags: string
+  tags: string[]
   slug: string
 }
 
@@ -17,9 +17,11 @@ const SinglePost = (props: Props) => {
         <div className="flex items-center gap-3">
           <h2 className="text-gray-100 text-2xl font-medium mb-2">{title}</h2>
           <div className="text-gray-100">{date}</div>
-          <span className="text-white bg-gray-500 rounded-xl px-2 pb-1 font-medium">
-            {tags}
-          </span>
+          {tags.map((tag) => (
+            <span className="text-white bg-gray-500 rounded-xl px-2 pb-1 font-medium">
+              {tag}
+            </span>
+          ))}
         </div>
         <p className="text-gray-100">{description}</p>
       </section>
