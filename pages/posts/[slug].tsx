@@ -1,4 +1,16 @@
 import React from 'react'
+import { getSinglePost } from '../../lib/notionAPI'
+
+export const getStaticProps = async ({ params }) => {
+  const post = await getSinglePost(params.slug)
+
+  return {
+    props: {
+      allPosts: post,
+    },
+    revalidate: 60 * 60 * 6,
+  }
+}
 
 const Post = () => {
   return (
