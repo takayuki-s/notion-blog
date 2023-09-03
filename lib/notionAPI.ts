@@ -48,4 +48,5 @@ export const getSinglePost = async (slug) => {
   })
   const page = response.results[0]
   console.log(page)
+  return page
 }
