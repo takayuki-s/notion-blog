@@ -1,12 +1,24 @@
 import React from 'react'
 import { getSinglePost } from '../../lib/notionAPI'
 
+export const getStaticPaths = async () => {
+  return {
+    paths: [
+      { params: { slug: 'first-post' } },
+      { params: { slug: 'second-post' } },
+      { params: { slug: 'third-post' } },
+    ],
+    fallback: 'blocking',
+  }
+}
+
 export const getStaticProps = async ({ params }) => {
+  console.log(params)
   const post = await getSinglePost(params.slug)
 
   return {
     props: {
-      allPosts: post,
+      post,
     },
     revalidate: 60 * 60 * 6,
   }
