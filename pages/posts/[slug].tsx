@@ -1,6 +1,9 @@
 import React from 'react'
 import { getAllPosts, getSinglePost } from '../../lib/notionAPI'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+// import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism' // こっちはエラー
 
 export const getStaticPaths = async () => {
   const allPosts = await getAllPosts()
@@ -38,7 +41,27 @@ const Post = ({ post }) => {
         </p>
       ))}
       <div className="mt-10 font-medium">
-        <ReactMarkdown children={post.markdown.parent}></ReactMarkdown>
+        <ReactMarkdown
+          children={post.markdown.parent}
+          components={{
+            code({ node, inline, className, children, ...props }) {
+              const match = /language-(\w+)/.exec(className || '')
+              return !inline && match ? (
+                <SyntaxHighlighter
+                  {...props}
+                  children={String(children).replace(/\n$/, '')}
+                  style={dark}
+                  language={match[1]}
+                  PreTag="div"
+                />
+              ) : (
+                <code {...props} className={className}>
+                  {children}
+                </code>
+              )
+            },
+          }}
+        ></ReactMarkdown>
       </div>
     </section>
   )
