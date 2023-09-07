@@ -2,7 +2,7 @@ import React from 'react'
 import { getAllPosts, getSinglePost } from '../../lib/notionAPI'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { dark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 // import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism' // こっちはエラー
 
 export const getStaticPaths = async () => {
@@ -50,7 +50,7 @@ const Post = ({ post }) => {
                 <SyntaxHighlighter
                   {...props}
                   children={String(children).replace(/\n$/, '')}
-                  style={dark}
+                  style={vscDarkPlus}
                   language={match[1]}
                   PreTag="div"
                 />
