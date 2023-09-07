@@ -3,6 +3,7 @@ import { getAllPosts, getSinglePost } from '../../lib/notionAPI'
 import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism'
+import Link from 'next/link'
 // import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism' // こっちはエラー
 
 export const getStaticPaths = async () => {
@@ -62,6 +63,10 @@ const Post = ({ post }) => {
             },
           }}
         ></ReactMarkdown>
+
+        <Link href="/">
+          <span className="pb-20 block mt-3 text-sky-700">←ホームに戻る</span>
+        </Link>
       </div>
     </section>
   )
