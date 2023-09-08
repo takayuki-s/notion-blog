@@ -57,3 +57,10 @@ export const getSinglePost = async (slug) => {
   console.log(mdString)
   return { metadata, markdown: mdString }
 }
+
+// Topページ用の記事を4つ取得
+export const getPostsForTopPage = async (pageSize: number = 4) => {
+  const allPosts = await getAllPosts()
+  const fourPosts = allPosts.slice(0, pageSize)
+  return fourPosts
+}
