@@ -1,13 +1,18 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getPostsByPage } from '../../../lib/notionAPI'
+import { getNumberOfPages, getPostsByPage } from '../../../lib/notionAPI'
 import SinglePost from '../../../components/Post/SinglePost'
 import { GetStaticPaths, GetStaticProps } from 'next'
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const numberOfPage = await getNumberOfPages()
+  let params = []
+  for (let i = 1; i <= numberOfPage; i++) {
+    params.push({ params: { page: i.toString() } })
+  }
   return {
-    paths: [{ params: { page: '1' } }, { params: { page: '2' } }],
+    paths: params,
     fallback: 'blocking',
   }
 }
