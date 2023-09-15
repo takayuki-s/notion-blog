@@ -47,7 +47,7 @@ const BlogPageList = ({ postsByPage, numberOfPage }) => {
         </h1>
         <section className="sm:grid grid-cols-2 w-5/6 gap-3 mx-auto">
           {postsByPage.map((post) => (
-            <div>
+            <div key={post.id}>
               <SinglePost
                 title={post.title}
                 description={post.description}
