@@ -1,7 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getNumberOfPages, getPostsByPage } from '../../../../../lib/notionAPI'
+import {
+  getNumberOfPages,
+  getPostsByTagAndPage,
+} from '../../../../../lib/notionAPI'
 import SinglePost from '../../../../../components/Post/SinglePost'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Pagination from '../../../../../components/Pagination/Pagination'
@@ -19,20 +22,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const currentPage = context.params?.page
-  const postsByPage = await getPostsByPage(parseInt(currentPage.toString(), 10))
-  const numberOfPage = await getNumberOfPages()
+  const currentPage: string = context.params?.page.toString()
+  const currentTag: string = context.params?.tag.toString()
+  const posts = await getPostsByTagAndPage(
+    currentTag,
+    parseInt(currentPage, 10),
+  )
 
   return {
     props: {
-      postsByPage,
-      numberOfPage,
+      posts,
     },
     revalidate: 60 * 60 * 6, // 6時間ごとに更新
   }
 }
 
-const BlogPageList = ({ postsByPage, numberOfPage }) => {
+const BlogPageList = ({ posts }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -46,7 +51,7 @@ const BlogPageList = ({ postsByPage, numberOfPage }) => {
           Notion Blog🚀
         </h1>
         <section className="sm:grid grid-cols-2 w-5/6 gap-3 mx-auto">
-          {postsByPage.map((post) => (
+          {posts.map((post) => (
             <div key={post.id}>
               <SinglePost
                 title={post.title}
@@ -59,7 +64,6 @@ const BlogPageList = ({ postsByPage, numberOfPage }) => {
             </div>
           ))}
         </section>
-        <Pagination numberOfPage={numberOfPage} />
       </main>
     </div>
   )
