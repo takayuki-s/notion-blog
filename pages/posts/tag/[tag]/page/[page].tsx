@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import {
+  getAllTags,
   getNumberOfPagesByTag,
   getPostsByTagAndPage,
 } from '../../../../../lib/notionAPI'
@@ -10,11 +11,17 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Pagination from '../../../../../components/Pagination/Pagination'
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const numberOfPageByTag = await getNumberOfPagesByTag('Blog')
+  const allTags = await getAllTags()
   let params = []
-  for (let i = 1; i <= numberOfPageByTag; i++) {
-    params.push({ params: { tag: 'Blog', page: i.toString() } })
-  }
+  await Promise.all(
+    allTags.map((tag: string) => {
+      return getNumberOfPagesByTag(tag).then((numberOfPagesByTag: number) => {
+        for (let i = 1; i <= numberOfPagesByTag; i++) {
+          params.push({ params: { tag: tag, page: i.toString() } })
+        }
+      })
+    }),
+  )
   console.log(params)
   return {
     paths: params,
