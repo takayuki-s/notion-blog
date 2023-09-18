@@ -42,12 +42,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
     props: {
       posts,
       numberOfPagesByTag,
+      currentTag,
     },
     revalidate: 60 * 60 * 6, // 6時間ごとに更新
   }
 }
 
-const BlogPageList = ({ posts, numberOfPagesByTag }) => {
+const BlogPageList = ({ posts, numberOfPagesByTag, currentTag }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -74,7 +75,7 @@ const BlogPageList = ({ posts, numberOfPagesByTag }) => {
             </div>
           ))}
         </section>
-        <Pagination numberOfPage={numberOfPagesByTag} />
+        <Pagination numberOfPage={numberOfPagesByTag} tag={currentTag} />
       </main>
     </div>
   )
