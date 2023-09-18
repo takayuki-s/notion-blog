@@ -22,7 +22,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       })
     }),
   )
-  console.log(params)
   return {
     paths: params,
     fallback: 'blocking',
@@ -37,15 +36,18 @@ export const getStaticProps: GetStaticProps = async (context) => {
     parseInt(currentPage, 10),
   )
 
+  const numberOfPagesByTag = await getNumberOfPagesByTag(currentTag)
+
   return {
     props: {
       posts,
+      numberOfPagesByTag,
     },
     revalidate: 60 * 60 * 6, // 6時間ごとに更新
   }
 }
 
-const BlogPageList = ({ posts }) => {
+const BlogPageList = ({ posts, numberOfPagesByTag }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -72,9 +74,32 @@ const BlogPageList = ({ posts }) => {
             </div>
           ))}
         </section>
+        <Pagination numberOfPage={numberOfPagesByTag} />
       </main>
     </div>
   )
 }
+
+// AbortControllerを作成
+const controller = new AbortController()
+// 対応するAbortSignalを取得
+const signal = controller.signal
+// 非同期処理を発生させる際にオプションとしてsignalを渡す
+const promise = fetch('https://example.com', { signal })
+// 何らかのタイミングで中止する
+controller.abort()
+
+// 中止による失敗を判定する
+fetch('/', { signal: controller.signal })
+  .then((res) => {
+    console.log('成功')
+  })
+  .catch((err) => {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      console.log('中止による失敗')
+    } else {
+      console.log('その他の失敗', err)
+    }
+  })
 
 export default BlogPageList
