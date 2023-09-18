@@ -80,26 +80,4 @@ const BlogPageList = ({ posts, numberOfPagesByTag }) => {
   )
 }
 
-// AbortControllerを作成
-const controller = new AbortController()
-// 対応するAbortSignalを取得
-const signal = controller.signal
-// 非同期処理を発生させる際にオプションとしてsignalを渡す
-const promise = fetch('https://example.com', { signal })
-// 何らかのタイミングで中止する
-controller.abort()
-
-// 中止による失敗を判定する
-fetch('/', { signal: controller.signal })
-  .then((res) => {
-    console.log('成功')
-  })
-  .catch((err) => {
-    if (err instanceof DOMException && err.name === 'AbortError') {
-      console.log('中止による失敗')
-    } else {
-      console.log('その他の失敗', err)
-    }
-  })
-
 export default BlogPageList
