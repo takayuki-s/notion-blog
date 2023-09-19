@@ -5,6 +5,7 @@ import { getPostsForTopPage } from '../lib/notionAPI'
 import SinglePost from '../components/Post/SinglePost'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
+import Tag from '../components/Tag/Tag'
 
 export const getStaticProps: GetStaticProps = async () => {
   const fourPosts = await getPostsForTopPage()
@@ -48,6 +49,7 @@ export default function Home({ fourPosts }) {
         >
           ...もっと見る
         </Link>
+        <Tag />
       </main>
     </div>
   )
