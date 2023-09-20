@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getPostsForTopPage } from '../lib/notionAPI'
+import { getAllTags, getPostsForTopPage } from '../lib/notionAPI'
 import SinglePost from '../components/Post/SinglePost'
 import { GetStaticProps } from 'next'
 import Link from 'next/link'
@@ -9,16 +9,18 @@ import Tag from '../components/Tag/Tag'
 
 export const getStaticProps: GetStaticProps = async () => {
   const fourPosts = await getPostsForTopPage()
+  const allTags = await getAllTags()
 
   return {
     props: {
-      fourPosts: fourPosts,
+      fourPosts,
+      allTags,
     },
     revalidate: 60 * 60 * 6, // 6時間ごとに更新
   }
 }
 
-export default function Home({ fourPosts }) {
+export default function Home({ fourPosts, allTags }) {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -49,7 +51,7 @@ export default function Home({ fourPosts }) {
         >
           ...もっと見る
         </Link>
-        <Tag />
+        <Tag tags={allTags} />
       </main>
     </div>
   )
