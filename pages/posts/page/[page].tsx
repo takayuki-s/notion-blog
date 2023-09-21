@@ -1,10 +1,15 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { getNumberOfPages, getPostsByPage } from '../../../lib/notionAPI'
+import {
+  getAllTags,
+  getNumberOfPages,
+  getPostsByPage,
+} from '../../../lib/notionAPI'
 import SinglePost from '../../../components/Post/SinglePost'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Pagination from '../../../components/Pagination/Pagination'
+import Tag from '../../../components/Tag/Tag'
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const numberOfPage = await getNumberOfPages()
@@ -22,17 +27,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const currentPage = context.params?.page
   const postsByPage = await getPostsByPage(parseInt(currentPage.toString(), 10))
   const numberOfPage = await getNumberOfPages()
+  const allTags = await getAllTags()
 
   return {
     props: {
       postsByPage,
       numberOfPage,
+      allTags,
     },
     revalidate: 60 * 60 * 6, // 6時間ごとに更新
   }
 }
 
-const BlogPageList = ({ postsByPage, numberOfPage }) => {
+const BlogPageList = ({ postsByPage, numberOfPage, allTags }) => {
   return (
     <div className="container h-full w-full mx-auto">
       <Head>
@@ -59,7 +66,8 @@ const BlogPageList = ({ postsByPage, numberOfPage }) => {
             </div>
           ))}
         </section>
-        <Pagination numberOfPage={numberOfPage} />
+        <Pagination numberOfPage={numberOfPage} tag={''} />
+        <Tag tags={allTags} />
       </main>
     </div>
   )
